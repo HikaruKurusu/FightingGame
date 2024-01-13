@@ -138,7 +138,7 @@ const background = new Background({
         x: 0,
         y: 0
     },
-    imgSrc: './img/back.png',
+    imgSrc: './Img/back.png',
     scale: .63
 })
 
@@ -164,7 +164,7 @@ const player = new Sprite({
         x: 0,
         y: 0
     },
-    imgSrc: './img/idle.png',
+    imgSrc: './Img/idle.png',
     maxFrames: 6,
     scale: 1
     // offsetL: {
