@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+        
+        <!--padding doesnt push divs out-->
+        <style>
+           * {
+                box-sizing: border-box;
+                font-family: 'Press Start 2P';
+            }
+        </style>
+
+    </head>
+    
+    <body> 
+
+        <div style = "text-align: center;margin-top: 70px;" >
+            <p>Fight!</p>
+        </div>
+
+        <div style=" display: flex; justify-content: center; align-items: center;">
+        <!--red container-->
+        
+        <div style="position: relative;display: inline-block;">
+            
+            <!--smaller red container-->
+            <div style="
+                position: absolute; 
+                display: flex; 
+                width: 100%;
+                align-items: center;
+                padding: 20px">
+                
+                <!--player 1 health -->
+                <div style="position: relative; height: 20px; width: 100%; display: flex; justify-content: flex-end;">
+                    <!--missing health-->
+                    <div style="background-color: rgb(233, 230, 230);height: 20px; width: 100%;"></div>   
+                    <!--health-->  
+                    <div 
+                    id="playerHealth"
+                    style="position: absolute; background: rgb(17, 224, 17);
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%"
+                    ></div>
+                </div> 
+
+                <!-- spacer-->
+                <div style="width:50px;height: 100px; flex-shrink: 0;"></div>
+
+                <!--player 2 health-->
+                <div style="position: relative; height: 20px; width: 100%;">
+                    <!--missing health-->
+                    <div style="background-color: rgb(233, 230, 230); height: 20px;"></div>   
+                    <!--health-->  
+                    <div 
+                    id="player2Health"
+                    style="position: absolute; background: rgb(17, 224, 17);
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0"
+                    ></div>
+                    
+                </div> 
+                
+            </div>
+            <div 
+            id="gameState"
+            style="position: absolute;color: rgb(243, 243, 243);display:none; justify-content: center; align-items: center;top: 0;right: 0;bottom: 0;left: 0;">Game state</div>  
+            <canvas></canvas>  
+        </div>
+        
+        </div>
+   
+
+
+    <script src="index.js"></script>
+    </body>
