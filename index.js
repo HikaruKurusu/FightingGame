@@ -25,6 +25,7 @@ class Background {
         this.framesElapsed = 0
         this.framesHold = 2
         this.offset = offset
+
     }
     draw() {
         c.drawImage(
@@ -56,7 +57,7 @@ class Background {
 }
 
 class Sprite extends Background {
-    constructor({position, velocity, color = 'blue', offset, offsetL,imgSrc, scale = 1,maxFrames = 1}) {
+    constructor({position, velocity, color = 'blue', offset, offsetL,imgSrc, scale = 1,maxFrames = 1,sprites}) {
         super({
             position,
             imgSrc,
@@ -83,6 +84,13 @@ class Sprite extends Background {
         this.frameCurrent = 0
         this.framesElapsed = 0
         this.framesHold = 5
+        this.sprites = sprites
+        for(const sprite in this.sprites) {
+            sprites[sprite].image = new Image()
+            sprites[sprite].image.src = sprites[sprite].imgSrc
+        }
+
+
         // this.isAttackingLeft
     }
     // draw() {
@@ -112,7 +120,7 @@ class Sprite extends Background {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-        if(this.position.y + this.height + this.velocity.y >= canvas.height - 90) {
+        if(this.position.y + this.height + this.velocity.y >= canvas.height - 120) {
             this.velocity.y = 0
         } else {
             this.velocity.y += gravity
@@ -162,11 +170,21 @@ const player = new Sprite({
     },
     offset: {
         x: 0,
-        y: 0
+        y: 0,
     },
-    imgSrc: './Img/idle.png',
-    maxFrames: 6,
-    scale: 1
+    imgSrc: './Img/vioidle.png',
+    maxFrames: 8,
+    scale: 1.2,
+    sprites: {
+        idle: {
+            imgSrc: './Img/vioidle.png',
+            maxFrames: 8,
+        },
+        run: {
+            imgSrc: './Img/run.png',
+            maxFrames: 8,
+        }
+    }
     // offsetL: {
     //     x: -50,
     //     y: 0
@@ -174,7 +192,7 @@ const player = new Sprite({
 }) 
 const player2 = new Sprite({
     position: {
-        x: 955,
+        x: 850,
         y: 200,
     },
     velocity: {
@@ -185,11 +203,24 @@ const player2 = new Sprite({
         x: 50,
         y: 0
     },
+    imgSrc: './Img/vioidle.png',
+    maxFrames: 8,
+    scale: 1,
+    sprites: {
+        idle: {
+            imgSrc: './Img/vioidle.png',
+            maxFrames: 8,
+        },
+        run: {
+            imgSrc: './Img/viorun.png',
+            maxFrames: 8,
+        }
+    }
     // offsetL: {
     //     x: -50,
     //     y: 0
     // },
-    color: 'white'
+    // color: 'white'
 }) 
 // player.draw()
 // player2.draw()
@@ -228,20 +259,21 @@ function animation() {
     player2.update()
     player.velocity.x = 0
     player2.velocity.x = 0
+    player.image = player.sprites.idle.image
     if(keys.a.pressed == true){ //&& player.lastKey == 'a') {
         player.velocity.x = -10
+        player.image = player.sprites.run.image
     } else if(keys.d.pressed == true){ //&& player.lastKey == 'd') {
         player.velocity.x = 10
-    } else {
-        player.velocity.x = 0
-    }
-
+        player.image = player.sprites.run.image
+    } 
+    player2.image = player2.sprites.idle.image
     if(keys.ArrowLeft.pressed == true){ //&& player2.lastKey == 'ArrowLeft') {
         player2.velocity.x = -10
+        player2.image = player2.sprites.run.image
     } else if(keys.ArrowRight.pressed == true){ //&& player2.lastKey == 'ArrowRight') {
         player2.velocity.x = 10
-    } else {
-        player2.velocity.x = 0
+        player2.image = player2.sprites.run.image
     }
     //attack
     if(collision({
