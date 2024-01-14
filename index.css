@@ -42,6 +42,9 @@ body {
     font-size: 30px;
     text-decoration: none;
 }
+.p{
+  font-display: initial;
+}
 p {
     font-size: 50px;
     color: rgb(251, 251, 251);
@@ -70,3 +73,4 @@ a:link {
   a:link, a:visited {
     text-decoration: none;
   }
+ 

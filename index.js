@@ -172,17 +172,21 @@ const player = new Sprite({
         x: 0,
         y: 0,
     },
-    imgSrc: './Img/vioidle.png',
-    maxFrames: 8,
+    imgSrc: './Img/idle.png',
+    maxFrames: 6,
     scale: 1.2,
     sprites: {
         idle: {
-            imgSrc: './Img/vioidle.png',
-            maxFrames: 8,
+            imgSrc: './Img/idle.png',
+            maxFrames: 6,
         },
         run: {
             imgSrc: './Img/run.png',
             maxFrames: 8,
+        },
+        jump: {
+            imgSrc: './Img/jump.png',
+            maxFrames: 2,
         }
     }
     // offsetL: {
@@ -214,6 +218,10 @@ const player2 = new Sprite({
         run: {
             imgSrc: './Img/viorun.png',
             maxFrames: 8,
+        },
+        jump: {
+            imgSrc: './Img/viojump.png',
+            maxFrames: 2,
         }
     }
     // offsetL: {
@@ -260,20 +268,38 @@ function animation() {
     player.velocity.x = 0
     player2.velocity.x = 0
     player.image = player.sprites.idle.image
+    player.maxFrames = player.sprites.idle.maxFrames
     if(keys.a.pressed == true){ //&& player.lastKey == 'a') {
         player.velocity.x = -10
         player.image = player.sprites.run.image
+        player.maxFrames = player.sprites.run.maxFrames
     } else if(keys.d.pressed == true){ //&& player.lastKey == 'd') {
         player.velocity.x = 10
         player.image = player.sprites.run.image
+        player.maxFrames = player.sprites.run.maxFrames
     } 
+    if(player.velocity.y < 0) {
+        player.image = player.sprites.jump.image
+        player.maxFrames = player.sprites.jump.maxFrames
+    }
+
+
+
+
     player2.image = player2.sprites.idle.image
+    player2.maxFrames = player2.sprites.idle.maxFrames
     if(keys.ArrowLeft.pressed == true){ //&& player2.lastKey == 'ArrowLeft') {
         player2.velocity.x = -10
         player2.image = player2.sprites.run.image
+        player2.maxFrames = player2.sprites.run.maxFrames
     } else if(keys.ArrowRight.pressed == true){ //&& player2.lastKey == 'ArrowRight') {
         player2.velocity.x = 10
         player2.image = player2.sprites.run.image
+        player2.maxFrames = player2.sprites.run.maxFrames
+    }
+    if(player2.velocity.y < 0) {
+        player2.image = player2.sprites.jump.image
+        player2.maxFrames = player2.sprites.jump.maxFrames
     }
     //attack
     if(collision({
@@ -321,8 +347,6 @@ function animation() {
     determineWinner()
 }
 
-
-//
 
 animation()
 window.addEventListener('keydown', (event) => {
