@@ -13,7 +13,7 @@ const gravity = .9
 
 
 class Background {
-    constructor({position,imgSrc, scale = 1,maxFrames = 1,offset}) {
+    constructor({position,imgSrc, scale = 1,maxFrames = 1,offset = {x: 0,y: 0}}) {
         this.position = position
         this.height = 150
         this.width = 50
@@ -34,8 +34,8 @@ class Background {
         0,
         this.image.width / this.maxFrames,
         this.image.height,
-        this.position.x,
-        this.position.y,
+        this.position.x - this.offset.x,
+        this.position.y - this.offset.y,
         (this.image.width/this.maxFrames) * this.scale,
         this.image.height * this.scale)
     }
@@ -57,12 +57,13 @@ class Background {
 }
 
 class Sprite extends Background {
-    constructor({position, velocity, color = 'blue', offset, offsetL,imgSrc, scale = 1,maxFrames = 1,sprites}) {
+    constructor({position, velocity, color = 'blue', offset = {x: 0,y: 0}, offsetL,imgSrc, scale = 1,maxFrames = 1,sprites}) {
         super({
             position,
             imgSrc,
             scale,
-            maxFrames
+            maxFrames,
+            offset
         })
         this.velocity = velocity
         this.height = 150
@@ -83,7 +84,7 @@ class Sprite extends Background {
         this.health = 100
         this.frameCurrent = 0
         this.framesElapsed = 0
-        this.framesHold = 5
+        this.framesHold = 16
         this.sprites = sprites
         for(const sprite in this.sprites) {
             sprites[sprite].image = new Image()
@@ -121,10 +122,19 @@ class Sprite extends Background {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-        if(this.position.y + this.height + this.velocity.y >= canvas.height - 120) {
+        if(this.position.y + this.height + this.velocity.y >= canvas.height -120) {
             this.velocity.y = 0
         } else {
             this.velocity.y += gravity
+        }
+        
+        if(this.position.x + this.width + this.velocity.x >= canvas.width) {
+
+            this.position.x = -120   
+        } 
+        if(this.position.x + this.width + this.velocity.x <= -120){
+            //this.velocity.x = 0
+            this.position.x = canvas.width -120
         }
     }
     attack() {
@@ -217,7 +227,11 @@ const player = new Sprite({
     },
     imgSrc: './Img/idle.png',
     maxFrames: 6,
-    scale: 1.2,
+    scale: 1,
+    offset: {
+        x: 0,
+        y: -35
+    },
     sprites: {
         idle: {
             imgSrc: './Img/idle.png',
@@ -260,7 +274,11 @@ const player2 = new Sprite({
     },
     imgSrc: './Img/vioidle.png',
     maxFrames: 8,
-    scale: 1,
+    scale: 0.9,
+    offset: {
+        x: 0,
+        y: -35
+    },
     sprites: {
         idle: {
             imgSrc: './Img/vioidle.png',
@@ -329,11 +347,11 @@ function animation() {
     //Player 1
     // player.maxFrames = player.sprites.idle.maxFrames
     if(keys.a.pressed == true){ //&& player.lastKey == 'a') {
-        player.velocity.x = -10
+        player.velocity.x = -5
         player.switchSprite('run')
         // player.maxFrames = player.sprites.run.maxFrames
     } else if(keys.d.pressed == true){ //&& player.lastKey == 'd') {
-        player.velocity.x = 10
+        player.velocity.x = 5
         player.switchSprite('run')
         // player.maxFrames = player.sprites.run.maxFrames
     } else {
@@ -351,10 +369,10 @@ function animation() {
 
 //Player2
     if(keys.ArrowLeft.pressed == true){ //&& player2.lastKey == 'ArrowLeft') {
-        player2.velocity.x = -10
+        player2.velocity.x = -5
         player2.switchSprite('run')
     } else if(keys.ArrowRight.pressed == true){ //&& player2.lastKey == 'ArrowRight') {
-        player2.velocity.x = 10
+        player2.velocity.x = 5
         player2.switchSprite('run')
     } else {
         player2.switchSprite('idle')
