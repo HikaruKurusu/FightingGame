@@ -117,6 +117,7 @@ class Sprite extends Background {
         this.attackBox.position.x = this.position.x - this.attackBox.offset.x
         this.attackBox.position.y = this.position.y - this.attackBox.offset.y
         // }
+        // c.fillRect(this.attackBox.position.x,this.attackBox.position.y,this.attackBox.width,this.attackBox.height)
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
@@ -127,11 +128,53 @@ class Sprite extends Background {
         }
     }
     attack() {
-        // this.switchSprite('attack1')
+        this.switchSprite('attack')
         this.isAttacking = true
         setTimeout(()=> {
             this.isAttacking = false
         },100)
+    }
+    switchSprite(sprite) {
+        if(this.image == this.sprites.attack.image && this.frameCurrent < this.sprites.attack.maxFrames - 1) {
+            return
+        }
+        switch(sprite) {
+            case 'idle':
+                if(this.image != this.sprites.idle.image) {
+                    this.image = this.sprites.idle.image
+                    this.maxFrames = this.sprites.idle.maxFrames
+                    this.frameCurrent = 0
+                }
+                break;
+            case 'run':
+                if(this.image != this.sprites.run.image){
+                    this.image = this.sprites.run.image
+                    this.maxFrames = this.sprites.run.maxFrames
+                    this.frameCurrent = 0
+                }
+                break;
+            case 'jump':
+                if(this.image != this.sprites.jump.image){
+                    this.image = this.sprites.jump.image
+                    this.maxFrames = this.sprites.jump.maxFrames
+                    this.frameCurrent = 0
+                } 
+                break;
+            case 'fall':
+                if(this.image != this.sprites.fall.image){
+                    this.image = this.sprites.fall.image
+                    this.maxFrames = this.sprites.fall.maxFrames
+                    this.frameCurrent = 0
+                } 
+                break;
+            case 'attack':
+                if(this.image != this.sprites.attack.image){
+                    this.image = this.sprites.attack.image
+                    this.maxFrames = this.sprites.attack.maxFrames
+                    this.frameCurrent = 0
+                } 
+                break;
+        }
     }
     // attackLeft() {
     //     // this.switchSprite('attack1')
@@ -187,6 +230,14 @@ const player = new Sprite({
         jump: {
             imgSrc: './Img/jump.png',
             maxFrames: 2,
+        },
+        fall: {
+            imgSrc: './Img/fall.png',
+            maxFrames: 2, 
+        },
+        attack: {
+            imgSrc: './Img/attack.png',
+            maxFrames: 6, 
         }
     }
     // offsetL: {
@@ -222,6 +273,14 @@ const player2 = new Sprite({
         jump: {
             imgSrc: './Img/viojump.png',
             maxFrames: 2,
+        },
+        fall: {
+            imgSrc: './Img/viofall.png',
+            maxFrames: 2, 
+        },
+        attack: {
+            imgSrc: './Img/vioattack.png',
+            maxFrames: 5, 
         }
     }
     // offsetL: {
@@ -230,8 +289,6 @@ const player2 = new Sprite({
     // },
     // color: 'white'
 }) 
-// player.draw()
-// player2.draw()
 const keys = {
     a: {
         pressed: false
@@ -267,39 +324,45 @@ function animation() {
     player2.update()
     player.velocity.x = 0
     player2.velocity.x = 0
-    player.image = player.sprites.idle.image
-    player.maxFrames = player.sprites.idle.maxFrames
+
+
+    //Player 1
+    // player.maxFrames = player.sprites.idle.maxFrames
     if(keys.a.pressed == true){ //&& player.lastKey == 'a') {
         player.velocity.x = -10
-        player.image = player.sprites.run.image
-        player.maxFrames = player.sprites.run.maxFrames
+        player.switchSprite('run')
+        // player.maxFrames = player.sprites.run.maxFrames
     } else if(keys.d.pressed == true){ //&& player.lastKey == 'd') {
         player.velocity.x = 10
-        player.image = player.sprites.run.image
-        player.maxFrames = player.sprites.run.maxFrames
-    } 
-    if(player.velocity.y < 0) {
-        player.image = player.sprites.jump.image
-        player.maxFrames = player.sprites.jump.maxFrames
+        player.switchSprite('run')
+        // player.maxFrames = player.sprites.run.maxFrames
+    } else {
+        player.switchSprite('idle')
     }
+    if(player.velocity.y < 0) {
+        player.switchSprite('jump')
+        // player.maxFrames = player.sprites.jump.maxFrames
+    } else if(player.velocity.y > 0) {
+        player.switchSprite('fall')
+    }   
 
 
 
 
-    player2.image = player2.sprites.idle.image
-    player2.maxFrames = player2.sprites.idle.maxFrames
+//Player2
     if(keys.ArrowLeft.pressed == true){ //&& player2.lastKey == 'ArrowLeft') {
         player2.velocity.x = -10
-        player2.image = player2.sprites.run.image
-        player2.maxFrames = player2.sprites.run.maxFrames
+        player2.switchSprite('run')
     } else if(keys.ArrowRight.pressed == true){ //&& player2.lastKey == 'ArrowRight') {
         player2.velocity.x = 10
-        player2.image = player2.sprites.run.image
-        player2.maxFrames = player2.sprites.run.maxFrames
+        player2.switchSprite('run')
+    } else {
+        player2.switchSprite('idle')
     }
     if(player2.velocity.y < 0) {
-        player2.image = player2.sprites.jump.image
-        player2.maxFrames = player2.sprites.jump.maxFrames
+        player2.switchSprite('jump')
+    } else if(player2.velocity.y > 0) {
+        player2.switchSprite('fall')
     }
     //attack
     if(collision({
