@@ -84,7 +84,7 @@ class Sprite extends Background {
         this.health = 100
         this.frameCurrent = 0
         this.framesElapsed = 0
-        this.framesHold = 16
+        this.framesHold = 3
         this.sprites = sprites
         for(const sprite in this.sprites) {
             sprites[sprite].image = new Image()
@@ -109,6 +109,9 @@ class Sprite extends Background {
     // }
     update() {
         this.draw()
+        //uncomment out for attackBox
+        //c.fillRect(this.attackBox.position.x,this.attackBox.position.y,this.width,this.height)
+
         // if(this.isAttackingLeft) {
         //     this.attackBox.position.x = this.position.x + this.attackBox.offsetL.x
         //     this.attackBox.position.y = this.position.y + this.attackBox.offsetL.y
@@ -135,6 +138,10 @@ class Sprite extends Background {
         if(this.position.x + this.width + this.velocity.x <= -120){
             //this.velocity.x = 0
             this.position.x = canvas.width -120
+        }
+        if(this.position.y + this.height + this.velocity.y < 0){
+            this.velocity.y = 0
+            this.position.y = 0
         }
     }
     attack() {
@@ -347,11 +354,11 @@ function animation() {
     //Player 1
     // player.maxFrames = player.sprites.idle.maxFrames
     if(keys.a.pressed == true){ //&& player.lastKey == 'a') {
-        player.velocity.x = -5
+        player.velocity.x = -10
         player.switchSprite('run')
         // player.maxFrames = player.sprites.run.maxFrames
     } else if(keys.d.pressed == true){ //&& player.lastKey == 'd') {
-        player.velocity.x = 5
+        player.velocity.x = 10
         player.switchSprite('run')
         // player.maxFrames = player.sprites.run.maxFrames
     } else {
@@ -369,10 +376,10 @@ function animation() {
 
 //Player2
     if(keys.ArrowLeft.pressed == true){ //&& player2.lastKey == 'ArrowLeft') {
-        player2.velocity.x = -5
+        player2.velocity.x = -10
         player2.switchSprite('run')
     } else if(keys.ArrowRight.pressed == true){ //&& player2.lastKey == 'ArrowRight') {
-        player2.velocity.x = 5
+        player2.velocity.x = 10
         player2.switchSprite('run')
     } else {
         player2.switchSprite('idle')
