@@ -395,8 +395,28 @@ function animation() {
         rectangle2: player2
     }) && player.isAttacking) {
         player.isAttacking = false
-        player2.health -= 20
-        document.querySelector('#player2Health').style.width = player2.health + '%'
+        player2.health -= 10
+        if(player2.health === 90){
+            document.querySelector('#hp10').style.color = 'grey'
+        } else if(player2.health === 80){
+            document.querySelector('#hp9').style.color = 'grey'
+        } else if(player2.health === 70){
+            document.querySelector('#hp8').style.color = 'grey'
+        } else if(player2.health === 60){
+            document.querySelector('#hp7').style.color = 'grey'
+        } else if(player2.health === 50){
+            document.querySelector('#hp6').style.color = 'grey'
+        } else if(player2.health === 40){
+            document.querySelector('#hp5').style.color = 'grey'
+        } else if(player2.health === 30){
+            document.querySelector('#hp4').style.color = 'grey'
+        } else if(player2.health === 20){
+            document.querySelector('#hp3').style.color = 'grey'
+        } else if(player2.health === 10){
+            document.querySelector('#hp2').style.color = 'grey'
+        } else if(player2.health === 0){
+            document.querySelector('#hp1').style.color = 'grey'
+        }
     } 
     //attack for player2
     if(collision({
@@ -404,8 +424,29 @@ function animation() {
         rectangle2: player
     }) && player2.isAttacking) {
         player2.isAttacking = false
-        player.health -= 20
-        document.querySelector('#playerHealth').style.width = player.health + '%'
+        player.health -= 10
+        if(player.health === 90){
+            document.querySelector('#hp1p').style.color = 'grey'
+        } else if(player.health === 80){
+            document.querySelector('#hp2p').style.color = 'grey'
+        } else if(player.health === 70){
+            document.querySelector('#hp3p').style.color = 'grey'
+        } else if(player.health === 60){
+            document.querySelector('#hp4p').style.color = 'grey'
+        } else if(player.health === 50){
+            document.querySelector('#hp5p').style.color = 'grey'
+        } else if(player.health === 40){
+            document.querySelector('#hp6p').style.color = 'grey'
+        } else if(player.health === 30){
+            document.querySelector('#hp7p').style.color = 'grey'
+        } else if(player.health === 20){
+            document.querySelector('#hp8p').style.color = 'grey'
+        } else if(player.health === 10){
+            document.querySelector('#hp9p').style.color = 'grey'
+        } else if(player.health === 0){
+            document.querySelector('#hp10p').style.color = 'grey'
+        }
+
     }
 
     // if(collision({
