@@ -57,13 +57,14 @@ class Background {
 }
 
 class Sprite extends Background {
-    constructor({position, velocity, color = 'blue', offset = {x: 0,y: 0}, offsetL,imgSrc, scale = 1,maxFrames = 1,sprites}) {
+    constructor({position, velocity, color = 'blue', offsetL,offset = {x: 0,y:0},imgSrc, scale = 1,maxFrames = 1,sprites,attackBox = {offset: {}, width: undefined,height: undefined}}) {
         super({
             position,
             imgSrc,
             scale,
             maxFrames,
             offset
+            
         })
         this.velocity = velocity
         this.height = 150
@@ -74,10 +75,10 @@ class Sprite extends Background {
                 x: this.position.x,
                 y: this.position.y
             },
-            offset,
+            offset: attackBox.offset,
             offsetL,
-            width: 100,
-            height: 50,
+            width: attackBox.width,
+            height: attackBox.height,
         }
         this.color = color
         this.isAttacking
@@ -109,8 +110,9 @@ class Sprite extends Background {
     // }
     update() {
         this.draw()
-        //uncomment out for attackBox
-        //c.fillRect(this.attackBox.position.x,this.attackBox.position.y,this.width,this.height)
+        //uncomment out for hit box
+        // c.fillStyle = 'green'
+        // c.fillRect(this.position.x,this.position.y,this.width,this.height)
 
         // if(this.isAttackingLeft) {
         //     this.attackBox.position.x = this.position.x + this.attackBox.offsetL.x
@@ -121,11 +123,13 @@ class Sprite extends Background {
         this.attackBox.position.x = this.position.x - this.attackBox.offset.x
         this.attackBox.position.y = this.position.y - this.attackBox.offset.y
         // }
+        // //uncomment out for attackbox
+        // c.fillStyle = 'red'
         // c.fillRect(this.attackBox.position.x,this.attackBox.position.y,this.attackBox.width,this.attackBox.height)
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-        if(this.position.y + this.height + this.velocity.y >= canvas.height -120) {
+        if(this.position.y + this.height + this.velocity.y >= canvas.height - 87) {
             this.velocity.y = 0
         } else {
             this.velocity.y += gravity
@@ -147,14 +151,27 @@ class Sprite extends Background {
     attack() {
         this.switchSprite('attack')
         this.isAttacking = true
-        setTimeout(()=> {
+        setTimeout(() => {
             this.isAttacking = false
         },100)
     }
+
+    takehit(){
+        this.switchSprite('takehit')
+        this.health -= 10
+
+    }
+    
     switchSprite(sprite) {
-        if(this.image == this.sprites.attack.image && this.frameCurrent < this.sprites.attack.maxFrames - 1) {
+        
+        
+        
+        if(this.image == this.sprites.attack.image && this.frameCurrent < this.sprites.attack.maxFrames - 1) 
             return
-        }
+        
+        if(this.image == this.sprites.takehit.image && this.frameCurrent < this.sprites.takehit.maxFrames - 1)
+            return
+        
         switch(sprite) {
             case 'idle':
                 if(this.image != this.sprites.idle.image) {
@@ -191,6 +208,13 @@ class Sprite extends Background {
                     this.frameCurrent = 0
                 } 
                 break;
+            case 'takehit':
+                if(this.image != this.sprites.takehit.image){
+                    this.image = this.sprites.takehit.image
+                    this.maxFrames = this.sprites.takehit.maxFrames
+                    this.frameCurrent = 0
+                } 
+                break;
         }
     }
     // attackLeft() {
@@ -221,7 +245,7 @@ const background = new Background({
 // })///////////////////////////
 const player = new Sprite({
     position: {
-        x: 20,
+        x: 75,
         y: 0,
     },
     velocity: {
@@ -236,8 +260,8 @@ const player = new Sprite({
     maxFrames: 6,
     scale: 1,
     offset: {
-        x: 0,
-        y: -35
+        x: 60,
+        y: 0
     },
     sprites: {
         idle: {
@@ -259,12 +283,27 @@ const player = new Sprite({
         attack: {
             imgSrc: './Img/attack.png',
             maxFrames: 6, 
+        },
+        takehit: {
+            imgSrc: './Img/take hit.png',
+            maxFrames: 4,
         }
-    }
+    },
     // offsetL: {
     //     x: -50,
     //     y: 0
     // },
+    attackBox: {
+        offset: {
+            x: -50,
+            y: -70
+        },
+        width: 90,
+        height: 50
+
+    }
+        
+
 }) 
 const player2 = new Sprite({
     position: {
@@ -276,15 +315,15 @@ const player2 = new Sprite({
         y: 10,
     },
     offset: {
-        x: 50,
+        x: 0,
         y: 0
     },
     imgSrc: './Img/vioidle.png',
     maxFrames: 8,
     scale: 0.9,
     offset: {
-        x: 0,
-        y: -35
+        x: 60,
+        y: 0
     },
     sprites: {
         idle: {
@@ -306,7 +345,20 @@ const player2 = new Sprite({
         attack: {
             imgSrc: './Img/vioattack.png',
             maxFrames: 5, 
+        },
+        takehit: {
+            imgSrc: './img/viotakehit.png',
+            maxFrames: 4,
         }
+    },
+    attackBox: {
+        offset: {
+            x: 50,
+            y: -50
+        },
+        width: 100,
+        height: 50
+
     }
     // offsetL: {
     //     x: -50,
@@ -395,7 +447,8 @@ function animation() {
         rectangle2: player2
     }) && player.isAttacking) {
         player.isAttacking = false
-        player2.health -= 10
+        player2.takehit()
+    
         if(player2.health === 90){
             document.querySelector('#hp10').style.color = 'grey'
         } else if(player2.health === 80){
@@ -418,13 +471,17 @@ function animation() {
             document.querySelector('#hp1').style.color = 'grey'
         }
     } 
+    //player miss
+    // if (player.isAttacking && player.frameCurrent === 3){
+    //     player.isAttacking = false
+    // }
     //attack for player2
     if(collision({
         rectangle1: player2,
         rectangle2: player
     }) && player2.isAttacking) {
         player2.isAttacking = false
-        player.health -= 10
+        player.takehit()
         if(player.health === 90){
             document.querySelector('#hp1p').style.color = 'grey'
         } else if(player.health === 80){
