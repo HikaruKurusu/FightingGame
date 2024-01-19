@@ -135,13 +135,13 @@ class Sprite extends Background {
             this.velocity.y += gravity
         }
         
-        if(this.position.x + this.width + this.velocity.x >= canvas.width) {
+        if(this.position.x + this.width + this.velocity.x >= canvas.width + 100) {
 
-            this.position.x = -120   
+            this.position.x = -80   
         } 
-        if(this.position.x + this.width + this.velocity.x <= -120){
+        if(this.position.x + this.width + this.velocity.x <= -100){
             //this.velocity.x = 0
-            this.position.x = canvas.width -120
+            this.position.x = canvas.width 
         }
         if(this.position.y + this.height + this.velocity.y < 0){
             this.velocity.y = 0
@@ -288,6 +288,10 @@ const player = new Sprite({
             imgSrc: './Img/take hit.png',
             maxFrames: 4,
         }
+        // death: {
+        //     imgSrc: './Img/death.png',
+        //     max
+        // }
     },
     // offsetL: {
     //     x: -50,
