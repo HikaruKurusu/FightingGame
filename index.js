@@ -87,6 +87,7 @@ class Sprite extends Background {
         this.framesElapsed = 0
         this.framesHold = 3
         this.sprites = sprites
+        this.dead = false
         for(const sprite in this.sprites) {
             sprites[sprite].image = new Image()
             sprites[sprite].image.src = sprites[sprite].imgSrc
@@ -134,20 +135,24 @@ class Sprite extends Background {
         } else {
             this.velocity.y += gravity
         }
-        
-        if(this.position.x + this.width + this.velocity.x >= canvas.width + 100) {
 
+        //right bound
+        if(this.position.x + this.width + this.velocity.x >= canvas.width + 100) {
             this.position.x = -80   
         } 
+
+        //left bound
         if(this.position.x + this.width + this.velocity.x <= -100){
-            //this.velocity.x = 0
             this.position.x = canvas.width 
         }
+
+        //ceiling bounds
         if(this.position.y + this.height + this.velocity.y < 0){
             this.velocity.y = 0
             this.position.y = 0
         }
     }
+
     attack() {
         this.switchSprite('attack')
         this.isAttacking = true
@@ -157,15 +162,24 @@ class Sprite extends Background {
     }
 
     takehit(){
-        this.switchSprite('takehit')
         this.health -= 10
+        
+        if(this.health <= 0){
+            this.switchSprite('death')
+            this.dead = true
+        }else{
+            this.switchSprite('takehit')
+        }
+            
 
     }
     
     switchSprite(sprite) {
-        
-        
-        
+        if(this.image == this.sprites.death.image){
+            return
+
+        }
+            
         if(this.image == this.sprites.attack.image && this.frameCurrent < this.sprites.attack.maxFrames - 1) 
             return
         
@@ -212,6 +226,13 @@ class Sprite extends Background {
                 if(this.image != this.sprites.takehit.image){
                     this.image = this.sprites.takehit.image
                     this.maxFrames = this.sprites.takehit.maxFrames
+                    this.frameCurrent = 0
+                } 
+                break;
+            case 'death':
+                if(this.image != this.sprites.death.image){
+                    this.image = this.sprites.death.image
+                    this.maxFrames = this.sprites.death.maxFrames
                     this.frameCurrent = 0
                 } 
                 break;
@@ -287,11 +308,11 @@ const player = new Sprite({
         takehit: {
             imgSrc: './Img/take hit.png',
             maxFrames: 4,
+        },
+        death: {
+            imgSrc: './Img/take hit.png',
+            maxFrames: 4
         }
-        // death: {
-        //     imgSrc: './Img/death.png',
-        //     max
-        // }
     },
     // offsetL: {
     //     x: -50,
@@ -353,6 +374,10 @@ const player2 = new Sprite({
         takehit: {
             imgSrc: './img/viotakehit.png',
             maxFrames: 4,
+        },
+        death: {
+            imgSrc: './img/viotakehit.png',
+            maxFrames: 4
         }
     },
     attackBox: {
@@ -427,10 +452,7 @@ function animation() {
         player.switchSprite('fall')
     }   
 
-
-
-
-//Player2
+    //Player2
     if(keys.ArrowLeft.pressed == true){ //&& player2.lastKey == 'ArrowLeft') {
         player2.velocity.x = -10
         player2.switchSprite('run')
@@ -445,6 +467,8 @@ function animation() {
     } else if(player2.velocity.y > 0) {
         player2.switchSprite('fall')
     }
+
+
     //attack
     if(collision({
         rectangle1: player,
@@ -529,9 +553,11 @@ function animation() {
         if (player2.health <= 0){
             document.querySelector('#gameState').innerHTML = 'Player 1 Wins'
             document.querySelector('#gameState').style.display = 'flex'
+
         } else if(player.health <= 0){
             document.querySelector('#gameState').innerHTML = 'Player 2 Wins'
             document.querySelector('#gameState').style.display = 'flex'
+            
         }
     }
     determineWinner()
@@ -540,47 +566,53 @@ function animation() {
 
 animation()
 window.addEventListener('keydown', (event) => {
-    switch (event.key) {
-        case 'd':
-            // player.velocity.x = 1
-            keys.d.pressed = true
-            player.lastkey = 'd'
-            break
-        case 'a':
-            // player.velocity.x = -1
-            keys.a.pressed = true
-            player.lastkey = 'a'
-            break
-        case 'w':
-            player.velocity.y -= 20
-            break
-        case 'c':
-            player.attack()
-            break
-        // case 'x':
-        //     player.attackLeft()
-        //     break
-        case 'ArrowRight':
-            // player2.velocity.x = 1
-            keys.ArrowRight.pressed = true
-            player2.lastkey = 'ArrowRight'
-            break
-        case 'ArrowLeft':
-            // player2.velocity.x = -1
-            keys.ArrowLeft.pressed = true
-            player2.lastkey = 'ArrowLeft'
-            break
-        case 'ArrowUp':
-            player2.velocity.y -= 20
-            break
-        case '.':
-            // player2.isAttacking = true;
-            player2.attack()
-            break
+    if(!player.dead){
+        switch (event.key) {
+            case 'd':
+                // player.velocity.x = 1
+                keys.d.pressed = true
+                player.lastkey = 'd'
+                break
+            case 'a':
+                // player.velocity.x = -1
+                keys.a.pressed = true
+                player.lastkey = 'a'
+                break
+            case 'w':
+                player.velocity.y -= 20
+                break
+            case 'c':
+                player.attack()
+                break
+        }
+    }
+    if(!player2.dead){
+        switch (event.key){
+            // case 'x':
+            //     player.attackLeft()
+            //     break
+            case 'ArrowRight':
+                // player2.velocity.x = 1
+                keys.ArrowRight.pressed = true
+                player2.lastkey = 'ArrowRight'
+                break
+            case 'ArrowLeft':
+                // player2.velocity.x = -1
+                keys.ArrowLeft.pressed = true
+                player2.lastkey = 'ArrowLeft'
+                break
+            case 'ArrowUp':
+                player2.velocity.y -= 20
+                break
+            case '.':
+                // player2.isAttacking = true;
+                player2.attack()
+                break
         // case '/':
         //     // player2.isAttacking = true;
         //     player2.attackLeft()
         //     break
+    }
     }
 })
 window.addEventListener('keyup', (event) => {
