@@ -372,11 +372,11 @@ const player2 = new Sprite({
             maxFrames: 5, 
         },
         takehit: {
-            imgSrc: './img/viotakehit.png',
+            imgSrc: './Img/viotakehit.png',
             maxFrames: 4,
         },
         death: {
-            imgSrc: './img/viotakehit.png',
+            imgSrc: './Img/viotakehit.png',
             maxFrames: 4
         }
     },
