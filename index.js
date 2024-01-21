@@ -5,29 +5,30 @@ canvas.width = 1024
 canvas.height = 576
 
 /*things to do:
-background image
-game over
+crouch
+
 */
 c.fillRect(0, 0, canvas.width, canvas.height)
 const gravity = .9
 
 
 class Background {
-    constructor({position,imgSrc, scale = 1,maxFrames = 1,offset = {x: 0,y: 0}}) {
+    constructor({position,imgSrc, scale = 1,maxFrames = 1,height,width,offset = {x: 0,y: 0}}) {
         this.position = position
-        this.height = 150
-        this.width = 50
+        this.height = height
+        this.width = width
         this.image = new Image()
         this.image.src = imgSrc
         this.scale = scale
         this.maxFrames = maxFrames
         this.frameCurrent = 0
         this.framesElapsed = 0
-        this.framesHold = 2
+        this.framesHold = 6
         this.offset = offset
 
     }
     draw() {
+        
         c.drawImage(
         this.image,
         this.frameCurrent * (this.image.width/this.maxFrames),
@@ -38,6 +39,9 @@ class Background {
         this.position.y - this.offset.y,
         (this.image.width/this.maxFrames) * this.scale,
         this.image.height * this.scale)
+        // c.fillStyle = 'green'
+
+        // c.fillRect(this.position.x,this.position.y,this.width/2,this.height)
     }
     animateFrames() {
         this.framesElapsed++
@@ -51,6 +55,7 @@ class Background {
     }
     update() {
         this.draw()
+        
         this.animateFrames()
 
     }
@@ -63,11 +68,11 @@ class Sprite extends Background {
             imgSrc,
             scale,
             maxFrames,
-            offset
+            offset,
             
         })
         this.velocity = velocity
-        this.height = 150
+        this.height = 115
         this.width = 50
         this.lastKey
         this.attackBox = {
@@ -115,6 +120,9 @@ class Sprite extends Background {
         // c.fillStyle = 'green'
         // c.fillRect(this.position.x,this.position.y,this.width,this.height)
 
+
+        
+
         // if(this.isAttackingLeft) {
         //     this.attackBox.position.x = this.position.x + this.attackBox.offsetL.x
         //     this.attackBox.position.y = this.position.y + this.attackBox.offsetL.y
@@ -123,6 +131,7 @@ class Sprite extends Background {
         this.animateFrames()
         this.attackBox.position.x = this.position.x - this.attackBox.offset.x
         this.attackBox.position.y = this.position.y - this.attackBox.offset.y
+
         // }
         // //uncomment out for attackbox
         // c.fillStyle = 'red'
@@ -147,10 +156,10 @@ class Sprite extends Background {
         }
 
         //ceiling bounds
-        if(this.position.y + this.height + this.velocity.y < 0){
-            this.velocity.y = 0
-            this.position.y = 0
-        }
+        // if(this.position.y + this.height + this.velocity.y < 0){
+        //     this.velocity.y = 0
+        //     this.position.y = 0
+        // }
     }
 
     attack() {
@@ -252,18 +261,75 @@ const background = new Background({
         y: 0
     },
     imgSrc: './Img/back.png',
-    scale: .63
+    scale: .63,
+    height: 150,
+    width: 50,
+    
+
+})
+//new platform
+// const platform = new Background({
+//     position: {
+//         x: 300,
+//         y: 365
+//     },
+//     imgSrc: './Img/platform.png',
+//     scale: 3,
+//     //new parameter for background
+//     height: 10,
+//     width: 350,
+//     offset: {
+//         x: 125,
+//         y: 385
+//     } 
+// })
+
+//ceiling platform
+const ceiling = new Background({
+    position: {
+        x: 0,
+        y: 0
+    },
+    imgSrc: './Img/back.png',
+    scale: .01,
+    //new parameter for background
+    height: 1,
+    width: canvas.width,
+    
 })
 
+//light
 // const light = new Background({
 //     position: {
-//         x: 0,//this moves the lamp
-//         y: 0
+//         x: 100,
+//         y: 300
 //     },
-//     imgSrc: './img/light.png', 
-//     scale: 1.5, // this increases the lamp size
-//     maxFrames: 6
-// })///////////////////////////
+//     imgSrc: './Img/light.png', 
+//     scale: .75,
+//     maxFrames: 3
+// })
+
+//moving light
+// const light1 = new Background({
+//     position: {
+//         x: 50,
+//         y: 100
+//     },
+//     imgSrc: './Img/lampLight.png', 
+//     scale: 1.99,
+//     maxFrames: 8
+// })
+
+// const light3 = new Background({
+//     position: {
+//         x: 550,
+//         y: 100
+//     },
+//     imgSrc: './Img/lampLight.png', 
+//     scale: 1.99,
+//     maxFrames: 8
+// })
+
 const player = new Sprite({
     position: {
         x: 75,
@@ -273,16 +339,16 @@ const player = new Sprite({
         x: 0,
         y: 10,
     },
-    offset: {
-        x: 0,
-        y: 0,
-    },
+    // offset: {
+    //     x: 0,
+    //     y: 0,
+    // },
     imgSrc: './Img/idle.png',
     maxFrames: 6,
     scale: 1,
     offset: {
         x: 60,
-        y: 0
+        y: 35
     },
     sprites: {
         idle: {
@@ -332,23 +398,23 @@ const player = new Sprite({
 }) 
 const player2 = new Sprite({
     position: {
-        x: 850,
+        x: 900,
         y: 200,
     },
     velocity: {
         x: 0,
         y: 10,
     },
-    offset: {
-        x: 0,
-        y: 0
-    },
+    // offset: {
+    //     x: 0,
+    //     y: 0
+    // },
     imgSrc: './Img/vioidle.png',
     maxFrames: 8,
     scale: 0.9,
     offset: {
         x: 60,
-        y: 0
+        y: 35
     },
     sprites: {
         idle: {
@@ -395,6 +461,8 @@ const player2 = new Sprite({
     // },
     // color: 'white'
 }) 
+
+
 const keys = {
     a: {
         pressed: false
@@ -410,26 +478,99 @@ const keys = {
     }
 }
 let lastKey
+
 function collision({
     rectangle1,
     rectangle2
 }) {
-    if(rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x && rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width 
-        && rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y && rectangle1.attackBox.position.y < rectangle2.position.y + rectangle2.height) {
+    if(rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x &&
+        rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width && 
+        rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y && 
+        rectangle1.attackBox.position.y < rectangle2.position.y + rectangle2.height) {
             return true;
     }
     return false;
 }
+
+//new collision function
+function platformCollision({sprite, plat}){
+    if(
+        //checking if right side of sprite is past left of platform
+        sprite.position.x + sprite.width >= plat.position.x &&
+        // // //checking if left side of sprite is inside right side of playform
+        sprite.position.x  <= plat.position.x + plat.width &&
+        //checking if top side of sprite is past bottom of platform
+        sprite.position.y + sprite.height >= plat.position.y 
+        //checking if bottom side of sprite is inside top side of platSform
+        // sprite.position.y <= plat.position.y + plat.height 
+        )
+    {
+        return true
+    }
+    return false
+}
+
+function ceilingCollision({sprite, plat}){
+    if(sprite.position.x + sprite.width >= plat.position.x && sprite.position.x  <= plat.position.x + plat.width && sprite.position.y <= plat.position.y + plat.height ){
+        sprite.velocity.y = 7
+    }
+    
+}
+
+
+
 function animation() {
     window.requestAnimationFrame(animation)
     c.fillStyle = 'black'
     c.fillRect(0,0,canvas.width,canvas.height)
+    ceiling.update()
     background.update()
+    
     // light.update()/////////////////////
+    //new platform
+    //uncomment out for new stuff
+    // light1.update()
+    // light3.update()
+    // light.update()
+    // platform.update()
+
+    // uncomment to show platform
+    // c.fillStyle = 'green'
+    // c.fillRect(platform.position.x,platform.position.y,platform.width,platform.height)
+    // uncomment to show ceiling
+    // c.fillRect(ceiling.position.x,ceiling.position.y,ceiling.width,ceiling.height)
+
     player.update()
     player2.update()
     player.velocity.x = 0
     player2.velocity.x = 0
+
+    //uncomment out for more new stuff
+
+    //platform update for player1
+    // if( //if player is above platform and ...
+    //     player.position.y<platform.position.y-100 && 
+    //     //if player is not falling
+    //     player.velocity.y > 0){
+    //     if(platformCollision({sprite: player,plat: platform})){
+    //         player.velocity.y = 0
+    //         player.position.y = platform.position.y - 115
+    //     }
+    // }
+
+    //platform update for player2
+    // if(player2.position.y<platform.position.y-100 && player2.velocity.y > 0){
+        
+    //     if(platformCollision({sprite: player2,plat: platform})){
+    //         player2.velocity.y = 0
+    //         player2.position.y = platform.position.y - 115
+    //     }
+    // }
+
+    ceilingCollision({sprite: player,plat: ceiling})
+    ceilingCollision({sprite: player2,plat: ceiling})
+
+    
 
 
     //Player 1
@@ -533,6 +674,11 @@ function animation() {
         }
 
     }
+
+    // new platform function in action
+    //activate collision if player is above platform height
+    
+    
 
     // if(collision({
     //     rectangle1: player,
