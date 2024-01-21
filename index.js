@@ -268,21 +268,21 @@ const background = new Background({
 
 })
 //new platform
-// const platform = new Background({
-//     position: {
-//         x: 300,
-//         y: 365
-//     },
-//     imgSrc: './Img/platform.png',
-//     scale: 3,
-//     //new parameter for background
-//     height: 10,
-//     width: 350,
-//     offset: {
-//         x: 125,
-//         y: 385
-//     } 
-// })
+const platform = new Background({
+    position: {
+        x: 335,
+        y: 280
+    },
+    imgSrc: './Img/platform.png',
+    scale: 3,
+    //new parameter for background
+    height: 10,
+    width: 350,
+    offset: {
+        x: 125,
+        y: 385
+    } 
+})
 
 //ceiling platform
 const ceiling = new Background({
@@ -299,36 +299,36 @@ const ceiling = new Background({
 })
 
 //light
-// const light = new Background({
-//     position: {
-//         x: 100,
-//         y: 300
-//     },
-//     imgSrc: './Img/light.png', 
-//     scale: .75,
-//     maxFrames: 3
-// })
+const light = new Background({
+    position: {
+        x: 100,
+        y: 300
+    },
+    imgSrc: './Img/light.png', 
+    scale: .75,
+    maxFrames: 3
+})
 
 //moving light
-// const light1 = new Background({
-//     position: {
-//         x: 50,
-//         y: 100
-//     },
-//     imgSrc: './Img/lampLight.png', 
-//     scale: 1.99,
-//     maxFrames: 8
-// })
+const light1 = new Background({
+    position: {
+        x: 50,
+        y: 100
+    },
+    imgSrc: './Img/lampLight.png', 
+    scale: 1.99,
+    maxFrames: 8
+})
 
-// const light3 = new Background({
-//     position: {
-//         x: 550,
-//         y: 100
-//     },
-//     imgSrc: './Img/lampLight.png', 
-//     scale: 1.99,
-//     maxFrames: 8
-// })
+const light3 = new Background({
+    position: {
+        x: 550,
+        y: 100
+    },
+    imgSrc: './Img/lampLight.png', 
+    scale: 1.99,
+    maxFrames: 8
+})
 
 const player = new Sprite({
     position: {
@@ -339,10 +339,6 @@ const player = new Sprite({
         x: 0,
         y: 10,
     },
-    // offset: {
-    //     x: 0,
-    //     y: 0,
-    // },
     imgSrc: './Img/idle.png',
     maxFrames: 6,
     scale: 1,
@@ -380,10 +376,6 @@ const player = new Sprite({
             maxFrames: 4
         }
     },
-    // offsetL: {
-    //     x: -50,
-    //     y: 0
-    // },
     attackBox: {
         offset: {
             x: -50,
@@ -405,10 +397,6 @@ const player2 = new Sprite({
         x: 0,
         y: 10,
     },
-    // offset: {
-    //     x: 0,
-    //     y: 0
-    // },
     imgSrc: './Img/vioidle.png',
     maxFrames: 8,
     scale: 0.9,
@@ -455,11 +443,6 @@ const player2 = new Sprite({
         height: 50
 
     }
-    // offsetL: {
-    //     x: -50,
-    //     y: 0
-    // },
-    // color: 'white'
 }) 
 
 
@@ -526,13 +509,13 @@ function animation() {
     ceiling.update()
     background.update()
     
-    // light.update()/////////////////////
+    light.update()/////////////////////
     //new platform
     //uncomment out for new stuff
-    // light1.update()
-    // light3.update()
-    // light.update()
-    // platform.update()
+    light1.update()
+    light3.update()
+    light.update()
+    platform.update()
 
     // uncomment to show platform
     // c.fillStyle = 'green'
@@ -548,24 +531,24 @@ function animation() {
     //uncomment out for more new stuff
 
     //platform update for player1
-    // if( //if player is above platform and ...
-    //     player.position.y<platform.position.y-100 && 
-    //     //if player is not falling
-    //     player.velocity.y > 0){
-    //     if(platformCollision({sprite: player,plat: platform})){
-    //         player.velocity.y = 0
-    //         player.position.y = platform.position.y - 115
-    //     }
-    // }
+    if( //if player is above platform and ...
+        player.position.y<platform.position.y-100 && 
+        //if player is not falling
+        player.velocity.y > 0){
+        if(platformCollision({sprite: player,plat: platform})){
+            player.velocity.y = 0
+            player.position.y = platform.position.y - 115
+        }
+    }
 
     //platform update for player2
-    // if(player2.position.y<platform.position.y-100 && player2.velocity.y > 0){
+    if(player2.position.y<platform.position.y-100 && player2.velocity.y > 0){
         
-    //     if(platformCollision({sprite: player2,plat: platform})){
-    //         player2.velocity.y = 0
-    //         player2.position.y = platform.position.y - 115
-    //     }
-    // }
+        if(platformCollision({sprite: player2,plat: platform})){
+            player2.velocity.y = 0
+            player2.position.y = platform.position.y - 115
+        }
+    }
 
     ceilingCollision({sprite: player,plat: ceiling})
     ceilingCollision({sprite: player2,plat: ceiling})
